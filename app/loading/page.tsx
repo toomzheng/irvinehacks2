@@ -3,54 +3,47 @@
 import { useState, useEffect } from "react";
 
 export default function Home() {
-  const totalVideos = 48; // Total number of videos available
+  const totalVideos = 48;
   const [videoSrc, setVideoSrc] = useState("");
-  const [playedVideos, setPlayedVideos] = useState<number[]>([]); // Track played videos
+  const [playedVideos, setPlayedVideos] = useState<number[]>([]);
 
   useEffect(() => {
-    // Generate the initial random video when the component mounts
     generateRandomVideo();
   }, []);
 
   const generateRandomVideo = () => {
     if (playedVideos.length === totalVideos) {
-      // Reset played videos if all videos have been played
       setPlayedVideos([]);
     }
 
-    // Get a list of unplayed videos
     const unplayedVideos = Array.from({ length: totalVideos }, (_, i) => i + 1).filter(
       (video) => !playedVideos.includes(video)
     );
 
-    // Randomly select a video from the unplayed videos
     const randomIndex = Math.floor(Math.random() * unplayedVideos.length);
     const randomVideoNumber = unplayedVideos[randomIndex];
 
-    // Update state with the new video and track it as played
     setPlayedVideos((prev) => [...prev, randomVideoNumber]);
     setVideoSrc(`/Lebron_vids/vid${randomVideoNumber}.mp4`);
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      {/* Animated Background */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-purple-500 via-blue-500 to-indigo-600 animate-gradient-flow"></div>
-
+    <div className="relative flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-white text-black">
       {/* Main Content */}
       <main className="flex flex-col items-center w-full max-w-3xl">
         {/* Loading Message */}
-        <p className="mt-8 mb-8 text-xl text-white">Loading Nonprofits...</p>
+        <p className="mt-8 mb-8 text-3xl font-bold animate-pulse bg-gradient-to-r from-black to-gray-600 bg-clip-text text-transparent">
+          Discovering Amazing Nonprofits Near You...
+        </p>
 
         {/* Video Container */}
-        <div className="w-full aspect-video bg-black rounded-lg overflow-hidden">
-          {videoSrc ? (
+        <div className="w-full aspect-video bg-black rounded-lg overflow-hidden shadow-[0_0_100px_20px_rgb(0,89,255)]">          {videoSrc ? (
             <video
-              key={videoSrc} // Force re-render when the videoSrc changes
+              key={videoSrc}
               className="w-full h-full object-cover"
               autoPlay
               muted
-              onEnded={generateRandomVideo} // Trigger new video generation when the current one ends
+              onEnded={generateRandomVideo}
             >
               <source src={videoSrc} type="video/mp4" />
               Your browser does not support the video tag.
@@ -60,20 +53,21 @@ export default function Home() {
           )}
         </div>
 
-        <p className="mt-8 text-xl text-white">
-          Here's some LeBron highlights you can watch in the meantime.
+
+        <p className="mt-8 text-2xl font-semibold text-center leading-relaxed">
+          🏀 Enjoy these <span className="text-[rgb(0,89,255)] font-bold">LeBron highlights</span> while we prepare your matches!
         </p>
       </main>
 
       {/* Footer */}
       <footer className="mt-auto flex gap-6 flex-wrap items-center justify-center">
         <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4 text-white"
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="https://github.com/toomzheng/irvinehacks2"
           target="_blank"
           rel="noopener noreferrer"
         >
-          © 2025 Melissa's Nonprofits.
+          © 2025 Unity Nonprofits.
         </a>
       </footer>
     </div>

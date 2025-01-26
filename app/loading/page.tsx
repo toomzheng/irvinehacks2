@@ -3,14 +3,34 @@
 import { useState, useEffect } from "react";
 
 export default function Home() {
+  const totalVideos = 48; // Total number of videos available
   const [videoSrc, setVideoSrc] = useState("");
+  const [playedVideos, setPlayedVideos] = useState<number[]>([]); // Track played videos
 
   useEffect(() => {
-    // Generate a random number between 1 and 48
-    const randomVideoNumber = Math.floor(Math.random() * 48) + 1;
-    // Set the video source dynamically
-    setVideoSrc(`/Lebron_vids/vid${randomVideoNumber}.mp4`);
+    // Generate the initial random video when the component mounts
+    generateRandomVideo();
   }, []);
+
+  const generateRandomVideo = () => {
+    if (playedVideos.length === totalVideos) {
+      // Reset played videos if all videos have been played
+      setPlayedVideos([]);
+    }
+
+    // Get a list of unplayed videos
+    const unplayedVideos = Array.from({ length: totalVideos }, (_, i) => i + 1).filter(
+      (video) => !playedVideos.includes(video)
+    );
+
+    // Randomly select a video from the unplayed videos
+    const randomIndex = Math.floor(Math.random() * unplayedVideos.length);
+    const randomVideoNumber = unplayedVideos[randomIndex];
+
+    // Update state with the new video and track it as played
+    setPlayedVideos((prev) => [...prev, randomVideoNumber]);
+    setVideoSrc(`/Lebron_vids/vid${randomVideoNumber}.mp4`);
+  };
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -25,7 +45,14 @@ export default function Home() {
         {/* Video Container */}
         <div className="w-full aspect-video bg-black rounded-lg overflow-hidden">
           {videoSrc ? (
-            <video className="w-full h-full object-cover" controls src={videoSrc}>
+            <video
+              key={videoSrc} // Force re-render when the videoSrc changes
+              className="w-full h-full object-cover"
+              autoPlay
+              controls // Add controls for user interaction
+              onEnded={generateRandomVideo} // Trigger new video generation when the current one ends
+            >
+              <source src={videoSrc} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           ) : (

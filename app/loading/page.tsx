@@ -49,7 +49,7 @@ export default function Home() {
               key={videoSrc} // Force re-render when the videoSrc changes
               className="w-full h-full object-cover"
               autoPlay
-              controls // Add controls for user interaction
+              muted
               onEnded={generateRandomVideo} // Trigger new video generation when the current one ends
             >
               <source src={videoSrc} type="video/mp4" />

@@ -7,7 +7,6 @@ from pyairtable import Api
 from dotenv import load_dotenv
 import json
 from openai import OpenAI
-import google.generativeai as genai
 import typing_extensions as typing
 from typing import TypedDict, List, Optional
 
@@ -118,6 +117,7 @@ def nonprofits(zip_code, interest=""):
 
         page.goto(URL)
 
+        page.wait_for_timeout(10)
         # Fill ZIP code & submit
         response = page.query_elements(ZIP_CODE_QUERY)
         response.ZIP_code_input.fill(zip_string)
@@ -156,6 +156,7 @@ def nonprofits(zip_code, interest=""):
 6. NEVER say you couldn't find relevant nonprofits - instead, suggest the closest matches and explain how they could be helpful
 7. Include the exact organization name from the JSON data
 8. ALWAYS BE POSITIVE IN YOUR RESPONSES AND BE CERTAIN IN YOUR STATEMENTS, DONT USE WORDS LIKE PROBABLY OR LIKELY. BE SPECIFIC AND NICHE ABOUT HOW THIS CAN CHANGE THE COMMUNITY.
+9. SEARCH FOR SEOMTHING THEY'VE DONE RECENTLY. ONLY SEARCH THE WEB FOR THINGS RELATED TO THE NON-PROFITS PROVIDED IN THE JSON.
 
 YOUR OUTPUT MUST BE IN THIS EXACT FORMAT:
 [

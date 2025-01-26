@@ -93,3 +93,15 @@ body {
     transform: translateY(0);
   }
 }
+
+@font-face {
+  font-family: 'Futura';
+  src: url('/fonts/futura/futur.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html,
+body {
+  font-family: 'Futura', sans-serif;
+}

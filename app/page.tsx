@@ -45,11 +45,26 @@ export default function Home() {
         className="text-center"
       >
         <div className="text-6xl font-bold mb-4 font-impact">WE ARE</div>
-        <div className="text-8xl font-bold font-helvetica">
-          <span className="text-[#FF6B6B]">UNITY</span>{" "}
-          <span className="text-[#0066FF]">NONPROFITS.</span>
+        <div className="text-8xl font-bold extra-bold">
+          <span 
+            className="text-[#FF6B6B]"
+            style={{ 
+              textShadow: '3px 3px 6px rgba(255, 107, 107, 0.7)'
+            }}
+          >
+            UNITY
+          </span>{" "}
+          <span 
+            className="text-[#0066FF]"
+            style={{ 
+              textShadow: '3px 3px 6px rgba(0, 102, 255, 0.7)'
+            }}
+          >
+            NONPROFITS.
+          </span>
         </div>
       </motion.h1>
+
 
       <motion.h2
         initial="hidden"

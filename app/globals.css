@@ -83,3 +83,13 @@ body {
 .font-trends {
   font-family: "Trends", sans-serif;
 }
+
+@keyframes waveRise {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}

@@ -1,6 +1,41 @@
 # Unity Nonprofits 
 
 A platform connecting people with local nonprofits based on their interests and location, making community involvement more accessible than ever.
+SCROLL DOWN FOR QUICK START
+
+## Project Overview 
+
+### Inspiration
+On the way to Seaside in an Uber car, our retired driver's wish to give back more to his community inspired this project. His words, "I wish I could've done more work for my own community," sparked our mission to make community involvement more accessible.
+
+### What it does 
+
+Unity Nonprofits helps users:
+- Find local nonprofits based on zip code and interests
+- Save favorite organizations
+- Get instant access to nonprofit information
+- Connect with community service opportunities
+
+### Technical Stack 
+
+Frontend:
+- Next.js with TypeScript
+- TailwindCSS for styling
+- Session storage for state management
+
+Backend:
+- FastAPI (Python)
+- Melissa API integration
+- Playwright with AgentQL for data scraping
+- nGrok for API tunneling
+
+### Features 
+
+- Zip code-based nonprofit search
+- Interest-based filtering
+- Favorite organization saving
+- Real-time nonprofit information
+- Interactive loading screen with LeBron James highlights
 
 ## Quick Start 
 
@@ -55,40 +90,6 @@ ngrok http 8000
 uvicorn app:app --reload
 python login.py
 ```
-
-## Project Overview 
-
-### Inspiration
-On the way to Seaside in an Uber car, our retired driver's wish to give back more to his community inspired this project. His words, "I wish I could've done more work for my own community," sparked our mission to make community involvement more accessible.
-
-### What it does 
-
-Unity Nonprofits helps users:
-- Find local nonprofits based on zip code and interests
-- Save favorite organizations
-- Get instant access to nonprofit information
-- Connect with community service opportunities
-
-### Technical Stack 
-
-Frontend:
-- Next.js with TypeScript
-- TailwindCSS for styling
-- Session storage for state management
-
-Backend:
-- FastAPI (Python)
-- Melissa API integration
-- Playwright with AgentQL for data scraping
-- nGrok for API tunneling
-
-### Features 
-
-- Zip code-based nonprofit search
-- Interest-based filtering
-- Favorite organization saving
-- Real-time nonprofit information
-- Interactive loading screen with LeBron James highlights
 
 ## Future Development 
 

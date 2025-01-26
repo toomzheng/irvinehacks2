@@ -2,15 +2,58 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const totalVideos = 48;
   const [videoSrc, setVideoSrc] = useState("");
   const [playedVideos, setPlayedVideos] = useState<number[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     generateRandomVideo();
+    handleSearch();
   }, []);
+
+  const handleSearch = async () => {
+    try {
+      const zipCode = sessionStorage.getItem('lastZipCode');
+      const type = sessionStorage.getItem('lastType');
+
+      const response = await fetch(`/api/nonprofits?zipCode=${zipCode}&type=${type}`);
+
+      if (!response.ok) {
+        throw new Error('Search failed');
+      }
+
+      const newData = await response.json();
+
+      // Get existing results and append new ones
+      let existingResults = [];
+      try {
+        const storedResults = sessionStorage.getItem('nonprofitResults');
+        if (storedResults) {
+          existingResults = JSON.parse(storedResults);
+          if (!Array.isArray(existingResults)) {
+            existingResults = [];
+          }
+        }
+      } catch (error) {
+        console.error('Error parsing stored results:', error);
+        existingResults = [];
+      }
+
+      const combinedResults = [...existingResults, ...newData];
+
+      // Store combined results
+      sessionStorage.setItem('nonprofitResults', JSON.stringify(combinedResults));
+      sessionStorage.removeItem('isGenerating');
+      router.push('/info');
+    } catch (error) {
+      console.error('Error during search:', error);
+      router.push('/');
+    }
+  };
 
   const generateRandomVideo = () => {
     if (playedVideos.length === totalVideos) {
@@ -31,7 +74,7 @@ export default function Home() {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-white text-black">
       <main className="flex flex-col items-center w-full max-w-5xl mx-auto">
-        <motion.div 
+        <motion.div
           className="relative z-10 w-full max-w-[90vw] mx-auto px-4 py-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

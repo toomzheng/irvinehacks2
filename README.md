@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Unity Nonprofits 
 
-## Getting Started
+A platform connecting people with local nonprofits based on their interests and location, making community involvement more accessible than ever.
 
-First, run the development server:
+## Quick Start 
 
+### Prerequisites
+- Node.js (v18 or higher)
+- Python 3.8+
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/unity-nonprofits.git
+cd unity-nonprofits
+```
+
+2. Install frontend dependencies:
+```bash
+cd irvinehacks2
+npm install
+# or
+yarn install
+```
+
+3. Install backend dependencies:
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+4. Set up environment variables:
+- Create a `.env` file in the backend directory
+- Add required environment variables:
+```env
+AGENTQL_API_KEY=your_agentql_key
+MELISSA_API_KEY=your_melissa_key
+```
+
+5. Start the development servers:
+
+Frontend:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Backend:
+```bash
+cd backend
+ngrok http 8000
+uvicorn app:app --reload
+python login.py
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Overview 
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Inspiration
+On the way to Seaside in an Uber car, our retired driver's wish to give back more to his community inspired this project. His words, "I wish I could've done more work for my own community," sparked our mission to make community involvement more accessible.
 
-## Learn More
+### What it does 
 
-To learn more about Next.js, take a look at the following resources:
+Unity Nonprofits helps users:
+- Find local nonprofits based on zip code and interests
+- Save favorite organizations
+- Get instant access to nonprofit information
+- Connect with community service opportunities
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Technical Stack 
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Frontend:
+- Next.js with TypeScript
+- TailwindCSS for styling
+- Session storage for state management
 
-## Deploy on Vercel
+Backend:
+- FastAPI (Python)
+- Melissa API integration
+- Playwright with AgentQL for data scraping
+- nGrok for API tunneling
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Features 
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Zip code-based nonprofit search
+- Interest-based filtering
+- Favorite organization saving
+- Real-time nonprofit information
+- Interactive loading screen with LeBron James highlights
+
+## Future Development 
+
+- User authentication system
+- Enhanced API efficiency
+- Community blog platform
+- Event organization features
+- Review system for nonprofit experiences
+
+## Contributing 
+
+We welcome contributions! Please feel free to submit a Pull Request.
+
+
+## Acknowledgments 
+
+- Melissa API for nonprofit data
+- AgentQL for reliable web scraping
+- Our Uber driver for the inspiration
+- IrvineHacks 2025 for the opportunity

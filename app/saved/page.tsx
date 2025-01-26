@@ -3,10 +3,12 @@ import { useState, useEffect } from "react";
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MapPin, Globe, Phone } from "lucide-react";
+import { MapPin, Globe, Phone, Star, X } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [savedNonprofits, setSavedNonprofits] = useState<any[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     // Fetch saved nonprofits from local storage or an API
@@ -16,10 +18,28 @@ export default function Home() {
     }
   }, []);
 
+  const handleRemoveNonprofit = (nonprofitToRemove: any) => {
+    const updatedNonprofits = savedNonprofits.filter(
+      nonprofit => nonprofit.name !== nonprofitToRemove.name
+    );
+    setSavedNonprofits(updatedNonprofits);
+    localStorage.setItem('savedNonprofits', JSON.stringify(updatedNonprofits));
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8 font-sans bg-white text-black">
+      {/* Back Button */}
+      <div className="absolute top-8 left-8">
+        <Button
+          onClick={() => router.back()}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+        >
+          Back
+        </Button>
+      </div>
+
       <main className="flex flex-col items-center w-full max-w-7xl mx-auto">
-        <h1 className="text-4xl sm:text-5xl font-bold mb-12 text-center">
+        <h1 className="text-6xl sm:text-7xl font-bold mb-12 text-center">
           <span className="text-[#FF7B7B]">SAVED</span>{" "}
           <span className="text-[#2563EB]">NONPROFITS</span>
         </h1>
@@ -36,9 +56,21 @@ export default function Home() {
             >
               <Card className="bg-white shadow-xl hover:shadow-2xl transition-shadow h-full flex flex-col">
                 <CardHeader className="flex-none">
-                  <CardTitle className="text-2xl font-bold text-[#FF5260] line-clamp-2">
-                    {nonprofit.name}
-                  </CardTitle>
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="text-2xl font-bold text-[#FF5260] line-clamp-2">
+                      {nonprofit.name}
+                    </CardTitle>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleRemoveNonprofit(nonprofit)}
+                        className="text-red-500 hover:bg-red-100 transition-colors"
+                      >
+                        <X className="h-6 w-6" />
+                      </Button>
+                    </div>
+                  </div>
                   {nonprofit.category && (
                     <CardDescription className="text-lg text-gray-600 line-clamp-1">
                       {nonprofit.category}

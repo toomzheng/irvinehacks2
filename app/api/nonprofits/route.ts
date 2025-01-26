@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
   const { searchParams, pathname } = new URL(request.url)
-  
+
   // Handle zipCode from both URL patterns
   let zipCode = searchParams.get('zipCode')
   if (!zipCode) {
@@ -11,7 +11,7 @@ export async function GET(request: Request) {
       zipCode = matches[1]
     }
   }
-  
+
   const type = searchParams.get('type')
 
   if (!zipCode || !type) {
@@ -22,7 +22,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const backendUrl = 'https://3c16-169-234-69-233.ngrok-free.app' // Replace with your ngrok URL
+    const backendUrl = 'https://cf26-128-195-97-44.ngrok-free.app' // Replace with your ngrok URL
     const response = await fetch(
       `${backendUrl}/nonprofits/${zipCode}?interest=${encodeURIComponent(type)}`
     )

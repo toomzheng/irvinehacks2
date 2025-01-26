@@ -1,18 +1,24 @@
 import os
-import shutil
 
-# Define source and destination directories
-source_dir = '/private/var/folders/z5/f2p3m19x1jj43qhhdb47bymc0000gn/T/Untitled Project_AME'
-destination_dir = '/private/var/folders/z5/f2p3m19x1jj43qhhdb47bymc0000gn/T/Untitled Project_AME/Lebron_vids'
+def rename_mp4_files(folder_path):
+    try:
+        # List all files in the folder with .mp4 extension
+        files = [f for f in os.listdir(folder_path) if f.endswith('.mp4')]
+        
+        # Sort files to ensure consistent renaming order
+        files.sort()
 
-# Create destination directory if it doesn't exist
-os.makedirs(destination_dir, exist_ok=True)
+        # Rename each file
+        for index, file in enumerate(files):
+            new_name = f"vid{index + 1}.mp4"
+            old_path = os.path.join(folder_path, file)
+            new_path = os.path.join(folder_path, new_name)
+            os.rename(old_path, new_path)
 
-# Iterate through files in the source directory
-for filename in os.listdir(source_dir):
-    if filename.endswith('.mp4'):
-        source_path = os.path.join(source_dir, filename)
-        destination_path = os.path.join(destination_dir, filename)
-        shutil.move(source_path, destination_path)
+        print("Renaming completed successfully.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
-print("All mp4 files have been moved.")
+# Specify the folder path
+folder_path = "/Users/xunhongjiang/Documents/GitHub/irvinehacks2/Lebron_vids"
+rename_mp4_files(folder_path)

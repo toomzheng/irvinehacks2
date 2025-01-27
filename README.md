@@ -48,7 +48,7 @@ Backend:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/unity-nonprofits.git
+git clone https://github.com/toomzheng/unity-nonprofits.git
 cd unity-nonprofits
 ```
 
@@ -56,8 +56,6 @@ cd unity-nonprofits
 ```bash
 cd irvinehacks2
 npm install
-# or
-yarn install
 ```
 
 3. Install backend dependencies:
@@ -71,7 +69,10 @@ pip install -r requirements.txt
 - Add required environment variables:
 ```env
 AGENTQL_API_KEY=your_agentql_key
-MELISSA_API_KEY=your_melissa_key
+PERPLEXITY_API_KEY=your_perplexity_key
+EMAIL=your_melissa_email
+PASSWORD='your_melissa_password'
+^ make sure to create an account on melissa first.
 ```
 
 5. Start the development servers:
@@ -79,8 +80,6 @@ MELISSA_API_KEY=your_melissa_key
 Frontend:
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
 Backend:
@@ -102,7 +101,6 @@ python login.py
 ## Contributing 
 
 We welcome contributions! Please feel free to submit a Pull Request.
-
 
 ## Acknowledgments 
 

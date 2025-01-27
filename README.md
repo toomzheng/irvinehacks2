@@ -1,6 +1,6 @@
 # Unity Nonprofits 
 
-A platform connecting people with local nonprofits based on their interests and location, making community involvement more accessible than ever.
+A platform connecting people with local nonprofits based on their interests and location, making community involvement more accessible than ever. Submitted to Hack @ UCI
 SCROLL DOWN FOR QUICK START
 
 ## Project Overview 

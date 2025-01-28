@@ -15,6 +15,7 @@ export default function Home() {
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showLebronMode, setShowLebronMode] = useState(false);
   const router = useRouter();
 
   const searchSuggestions = [
@@ -130,8 +131,8 @@ export default function Home() {
     sessionStorage.setItem('lastZipCode', postalCode);
     sessionStorage.setItem('lastType', queryToUse);
     
-    // Navigate to loading page - let it handle the API call
-    router.push('/loading');
+    // Navigate to appropriate loading page based on LeBron mode
+    router.push(showLebronMode ? '/loading' : '/simple-loading');
   };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -149,6 +150,22 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-between min-h-screen bg-white relative overflow-hidden">
+      {/* Toggle Button */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="absolute top-8 left-8 z-20"
+      >
+        <button
+          onClick={() => setShowLebronMode(!showLebronMode)}
+          className={`p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ${
+            showLebronMode ? 'bg-[#FDB927] text-[#552583]' : 'bg-gray-200 hover:bg-gray-300'
+          }`}
+        >
+          <span className="text-2xl">👑</span>
+        </button>
+      </motion.div>
       {/* Spacer */}
       <div className="flex-grow-0 h-24" />
 
@@ -323,21 +340,28 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Lebron Mode Button */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.5 }}
-        className="relative z-10 w-full max-w-md px-4 mb-8"
-      >
-        <button
-          onClick={() => router.push('/lebron')}
-          className="w-full bg-[#552583] hover:bg-[#FDB927] text-white hover:text-[#552583] px-8 py-4 rounded-full text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
-        >
-          <span>Lebron Mode</span>
-          <span className="text-2xl">👑</span>
-        </button>
-      </motion.div>
+      {/* Lebron Mode Button Container - Always present */}
+      <div className="relative z-10 w-full max-w-md px-4 mb-8 h-[72px]">
+        <AnimatePresence>
+          {showLebronMode && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="absolute inset-0"
+            >
+              <button
+                onClick={() => router.push('/lebron')}
+                className="w-full bg-[#552583] hover:bg-[#FDB927] text-white hover:text-[#552583] px-8 py-4 rounded-full text-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
+              >
+                <span>Lebron Mode</span>
+                <span className="text-2xl">👑</span>
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

@@ -22,7 +22,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const backendUrl = 'https://1baf-128-195-97-44.ngrok-free.app' // Replace with your ngrok URL
+    const backendUrl = 'https://b333-128-54-50-221.ngrok-free.app' // Replace with your ngrok URL
     const response = await fetch(
       `${backendUrl}/nonprofits/${zipCode}?interest=${encodeURIComponent(type)}`
     )

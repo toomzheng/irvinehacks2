@@ -14,6 +14,7 @@ export default function NewsCarousel() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -28,11 +29,37 @@ export default function NewsCarousel() {
 
         // Multiple search queries to get more diverse results
         const searchQueries = [
+          // Nonprofit and charity focused
           'nonprofit+organization+news',
-          'nonprofit+charity+foundation+current',
-          'NGO+nonprofit+initiative+latest',
-          'nonprofit+organization+impact+today',
-          'charitable+foundation+nonprofit+news'
+          'charity+foundation+impact',
+          'NGO+humanitarian+aid',
+          'philanthropy+donation+initiative',
+          
+          // Community and social impact
+          'community+service+volunteer',
+          'social+impact+positive+change',
+          'community+development+success',
+          'grassroots+movement+change',
+          
+          // Global improvement initiatives
+          'sustainable+development+progress',
+          'climate+action+solution',
+          'education+initiative+success',
+          'poverty+reduction+progress',
+          
+          // Mental health and wellbeing
+          'mental+health+support+community',
+          'wellness+program+success',
+          'youth+empowerment+program',
+          
+          // Environmental and conservation
+          'environmental+conservation+success',
+          'wildlife+protection+initiative',
+          'ocean+cleanup+progress',
+          
+          // Technology for good
+          'technology+social+good',
+          'innovation+humanitarian+solution'
         ];
 
         console.log('Fetching news...');
@@ -47,7 +74,7 @@ export default function NewsCarousel() {
         const allArticles = await Promise.all(
           searchQueries.map(async (query) => {
             const response = await fetch(
-              `https://newsapi.org/v2/everything?q=${query}${locationQuery}&language=en&sortBy=publishedAt&pageSize=25&from=${fromDate}`,
+              `https://newsapi.org/v2/everything?q=${query}${locationQuery}&language=en&sortBy=publishedAt&pageSize=50&from=${fromDate}`,
               {
                 headers: {
                   'X-Api-Key': apiKey
@@ -67,18 +94,38 @@ export default function NewsCarousel() {
         // Combine and deduplicate articles
         const combinedArticles = allArticles.flat();
         
-        // Filter articles to ensure they are nonprofit-focused
-        const nonprofitKeywords = [
+        // Filter articles to ensure they are relevant
+        const relevantKeywords = [
+          // Nonprofit keywords
           'nonprofit', 'non-profit', 'charity', 'foundation', 'NGO',
-          'charitable', 'philanthropy', 'donation', 'fundraising'
+          'charitable', 'philanthropy', 'donation', 'fundraising',
+          
+          // Community keywords
+          'community', 'volunteer', 'service', 'grassroots',
+          'social impact', 'humanitarian',
+          
+          // Progress keywords
+          'improvement', 'development', 'initiative', 'success',
+          'progress', 'solution', 'innovation',
+          
+          // Cause keywords
+          'education', 'environment', 'climate', 'health',
+          'poverty', 'conservation', 'sustainability',
+          'empowerment', 'wellbeing', 'protection'
         ];
         
         const filteredArticles = combinedArticles.filter(article => {
+          if (!article.title || !article.description) return false;
           const text = `${article.title} ${article.description}`.toLowerCase();
-          return nonprofitKeywords.some(keyword => text.includes(keyword.toLowerCase()));
+          return (
+            relevantKeywords.some(keyword => text.includes(keyword.toLowerCase())) &&
+            !text.includes('bitcoin') && // Exclude cryptocurrency news
+            !text.includes('crypto') &&
+            !text.includes('stock market') // Exclude financial market news
+          );
         });
 
-        // Remove duplicates
+        // Remove duplicates using URL as unique identifier
         const uniqueArticles = Array.from(
           new Map(filteredArticles.map(article => [article.url, article])).values()
         );
@@ -98,7 +145,6 @@ export default function NewsCarousel() {
       } catch (error) {
         console.error('Error fetching news:', error);
         setError(error instanceof Error ? error.message : 'Failed to fetch news');
-        // Fallback to dummy data in case of error
         setNews([
           {
             title: "New Local Volunteering Initiative Launches",
@@ -122,31 +168,35 @@ export default function NewsCarousel() {
     };
 
     fetchNews();
-    // Fetch news every 30 minutes
     const intervalId = setInterval(fetchNews, 30 * 60 * 1000);
     return () => clearInterval(intervalId);
   }, []);
-
-  // Duplicate the news items to create seamless scrolling
-  const allNews = [...news, ...news];
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container || loading || news.length === 0) return;
 
-    const scrollHeight = container.scrollHeight / 2;
-    let scrollPos = 0;
-    
+    const scrollSpeed = 0.5;
+    const scrollInterval = 30;
+
     const scroll = () => {
-      scrollPos += 0.5;
-      if (scrollPos >= scrollHeight) {
-        scrollPos = 0;
-        container.scrollTop = 0;
-      }
-      container.scrollTop = scrollPos;
+      setScrollPosition(prev => {
+        const newPosition = prev + scrollSpeed;
+        const maxScroll = container.scrollHeight - container.clientHeight;
+        
+        // If we've scrolled past the height of one set of news items,
+        // reset to the top but maintain smooth appearance
+        if (newPosition >= maxScroll) {
+          container.scrollTop = 0;
+          return 0;
+        }
+        
+        container.scrollTop = newPosition;
+        return newPosition;
+      });
     };
 
-    const intervalId = setInterval(scroll, 30);
+    const intervalId = setInterval(scroll, scrollInterval);
     return () => clearInterval(intervalId);
   }, [loading, news]);
 
@@ -189,9 +239,10 @@ export default function NewsCarousel() {
           className="flex-1 overflow-hidden relative"
         >
           <div className="space-y-4">
-            {allNews.map((item, index) => (
+            {/* Original news items */}
+            {news.map((item, index) => (
               <Link 
-                key={`${index}-${item.title}`}
+                key={`${item.url}-${index}`}
                 href={item.url}
                 target="_blank"
                 className="block p-4 rounded-lg hover:bg-white hover:bg-opacity-10 transition-all"

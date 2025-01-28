@@ -1,4 +1,4 @@
-  "use client";
+"use client";
 
 import './globals.css';
 import { useState, useEffect, KeyboardEvent, useCallback } from "react";
@@ -65,7 +65,7 @@ export default function Home() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setPlaceholderIndex((prevIndex) => 
+      setPlaceholderIndex((prevIndex) =>
         prevIndex === searchSuggestions.length - 1 ? 0 : prevIndex + 1
       );
     }, 3000);
@@ -84,7 +84,7 @@ export default function Home() {
   const handleSaveNonprofit = (nonprofit: any) => {
     const updatedSavedNonprofits = [...savedNonprofits];
     const index = updatedSavedNonprofits.findIndex(n => n.name === nonprofit.name);
-    
+
     if (index === -1) {
       // Add to saved nonprofits
       updatedSavedNonprofits.push(nonprofit);
@@ -92,7 +92,7 @@ export default function Home() {
       // Remove from saved nonprofits
       updatedSavedNonprofits.splice(index, 1);
     }
-    
+
     setSavedNonprofits(updatedSavedNonprofits);
     localStorage.setItem('savedNonprofits', JSON.stringify(updatedSavedNonprofits));
   };
@@ -108,18 +108,18 @@ export default function Home() {
 
   const handleSurpriseMe = () => {
     if (!isValidPostalCode(postalCode)) return;
-    
+
     // Pick a random niche interest
     const randomInterest = nicheInterests[Math.floor(Math.random() * nicheInterests.length)];
     setSearchQuery(randomInterest);
-    
+
     // Auto-submit the search
     handleSearch(randomInterest);
   };
 
   const handleSearch = async (overrideQuery?: string) => {
     const queryToUse = overrideQuery || searchQuery;
-    
+
     if (!postalCode) {
       setError('Please enter a postal code');
       return;
@@ -131,7 +131,7 @@ export default function Home() {
     // Store the search parameters for loading page
     sessionStorage.setItem('lastZipCode', postalCode);
     sessionStorage.setItem('lastType', queryToUse);
-    
+
     // Navigate to appropriate loading page based on LeBron mode
     router.push(showLebronMode ? '/loading' : '/simple-loading');
   };
@@ -163,9 +163,8 @@ export default function Home() {
           >
             <button
               onClick={() => setShowLebronMode(!showLebronMode)}
-              className={`p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ${
-                showLebronMode ? 'bg-[#FDB927] text-[#552583]' : 'bg-gray-200 hover:bg-gray-300'
-              }`}
+              className={`p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 ${showLebronMode ? 'bg-[#FDB927] text-[#552583]' : 'bg-gray-200 hover:bg-gray-300'
+                }`}
             >
               <span className="text-2xl">👑</span>
             </button>
@@ -216,17 +215,17 @@ export default function Home() {
               >
                 <div className="text-6xl font-bold mb-4 font-impact">WE ARE</div>
                 <div className="text-8xl font-bold extra-bold">
-                  <span 
+                  <span
                     className="text-[#FF6B6B]"
-                    style={{ 
+                    style={{
                       textShadow: '3px 3px 6px rgba(255, 107, 107, 0.7)'
                     }}
                   >
                     UNITY
                   </span>{" "}
-                  <span 
+                  <span
                     className="text-[#0066FF]"
-                    style={{ 
+                    style={{
                       textShadow: '3px 3px 6px rgba(0, 102, 255, 0.7)'
                     }}
                   >
@@ -325,14 +324,14 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="h-24 relative"> 
+                <div className="h-24 relative">
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: showSearchButton ? 1 : 0 }}
                     transition={{ duration: 0.5, ease: "easeOut" }}
                     className="absolute left-1/2 -translate-x-1/2 top-0 w-full flex justify-center"
                   >
-                    <button 
+                    <button
                       className="px-12 py-6 bg-blue-500 text-white rounded-full text-2xl hover:bg-blue-600 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform"
                       onClick={handleSearch}
                     >
@@ -368,22 +367,19 @@ export default function Home() {
           </div>
         </div>
       </div>
-      
-      <motion.footer
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, ease: "easeOut", delay: 0.6 }}
-        className="mt-auto flex gap-6 flex-wrap items-center justify-center text-xl"
+
+      <footer
+        className="fixed bottom-0 left-64 right-0 py-4 text-xl text-center bg-transparent"
       >
         <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4 justify-center text-black"
           href="https://github.com/toomzheng/irvinehacks2"
           target="_blank"
           rel="noopener noreferrer"
         >
-          2025 Unity Nonprofits.
+          2025 Unity Nonprofits. 
         </a>
-      </motion.footer>
+      </footer>
     </main>
   );
 }

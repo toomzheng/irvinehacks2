@@ -313,7 +313,7 @@ export default function Home() {
                                   onClick={handleSurpriseMe}
                                   className="text-[#FF7B7B] hover:text-[#FF5260] hover:bg-transparent font-semibold px-4 py-2 text-lg"
                                 >
-                                  Surprise Me!
+                                  I'm feeling lucky!
                                 </button>
                               </motion.div>
                             )}

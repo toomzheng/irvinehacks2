@@ -126,31 +126,12 @@ export default function Home() {
     setIsLoading(true);
     setError('');
 
-    // Navigate to loading page before making the API call
+    // Store the search parameters for loading page
+    sessionStorage.setItem('lastZipCode', postalCode);
+    sessionStorage.setItem('lastType', queryToUse);
+    
+    // Navigate to loading page - let it handle the API call
     router.push('/loading');
-
-    try {
-      const response = await fetch(`/api/nonprofits?zipCode=${postalCode}&type=${queryToUse}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch nonprofits');
-      }
-      const data = await response.json();
-      
-      // Store the search parameters for Generate More feature
-      sessionStorage.setItem('lastZipCode', postalCode);
-      sessionStorage.setItem('lastType', queryToUse);
-      sessionStorage.setItem('nonprofitResults', JSON.stringify(data));
-      
-      // Navigate to info page after successful fetch
-      router.push('/info');
-    } catch (error) {
-      console.error('Error fetching results:', error);
-      setError('Failed to fetch results. Please try again.');
-      // Return to home page on error
-      router.push('/');
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {

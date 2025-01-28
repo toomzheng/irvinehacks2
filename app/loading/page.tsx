@@ -20,38 +20,31 @@ export default function Home() {
       const zipCode = sessionStorage.getItem('lastZipCode');
       const type = sessionStorage.getItem('lastType');
 
+      if (!zipCode || !type) {
+        console.error('Missing search parameters');
+        router.push('/');
+        return;
+      }
+
       const response = await fetch(`/api/nonprofits?zipCode=${zipCode}&type=${type}`);
 
       if (!response.ok) {
         throw new Error('Search failed');
       }
 
-      const newData = await response.json();
-
-      // Get existing results and append new ones
-      let existingResults = [];
-      try {
-        const storedResults = sessionStorage.getItem('nonprofitResults');
-        if (storedResults) {
-          existingResults = JSON.parse(storedResults);
-          if (!Array.isArray(existingResults)) {
-            existingResults = [];
-          }
-        }
-      } catch (error) {
-        console.error('Error parsing stored results:', error);
-        existingResults = [];
-      }
-
-      const combinedResults = [...existingResults, ...newData];
-
-      // Store combined results
-      sessionStorage.setItem('nonprofitResults', JSON.stringify(combinedResults));
-      sessionStorage.removeItem('isGenerating');
+      const data = await response.json();
+      
+      // Store the results
+      sessionStorage.setItem('nonprofitResults', JSON.stringify(data));
+      
+      // Navigate to info page
       router.push('/info');
     } catch (error) {
       console.error('Error during search:', error);
-      router.push('/');
+      // Wait a bit before redirecting on error
+      setTimeout(() => {
+        router.push('/');
+      }, 2000);
     }
   };
 

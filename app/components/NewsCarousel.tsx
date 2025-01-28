@@ -27,105 +27,109 @@ export default function NewsCarousel() {
         const postalCode = sessionStorage.getItem('lastZipCode') || '';
         const locationQuery = postalCode ? `+location:${postalCode}` : '';
 
-        // Multiple search queries to get more diverse results
-        const searchQueries = [
-          // Nonprofit and charity focused
-          'nonprofit+organization+news',
-          'charity+foundation+impact',
-          'NGO+humanitarian+aid',
-          'philanthropy+donation+initiative',
-          
-          // Community and social impact
-          'community+service+volunteer',
-          'social+impact+positive+change',
-          'community+development+success',
-          'grassroots+movement+change',
-          
-          // Global improvement initiatives
-          'sustainable+development+progress',
-          'climate+action+solution',
-          'education+initiative+success',
-          'poverty+reduction+progress',
-          
-          // Mental health and wellbeing
-          'mental+health+support+community',
-          'wellness+program+success',
-          'youth+empowerment+program',
-          
-          // Environmental and conservation
-          'environmental+conservation+success',
-          'wildlife+protection+initiative',
-          'ocean+cleanup+progress',
-          
-          // Technology for good
-          'technology+social+good',
-          'innovation+humanitarian+solution'
-        ];
-
-        console.log('Fetching news...');
-        
-        // Get today's date for fresh news
-        const today = new Date();
-        const thirtyDaysAgo = new Date(today);
-        thirtyDaysAgo.setDate(today.getDate() - 30);
-        const fromDate = thirtyDaysAgo.toISOString().split('T')[0];
-
-        // Fetch news for each search query
-        const allArticles = await Promise.all(
-          searchQueries.map(async (query) => {
+        // Try top headlines first, then fall back to everything endpoint
+        const fetchAttempts = [
+          // First attempt: US top headlines with category
+          async () => {
+            console.log('Attempting to fetch top headlines...');
             const response = await fetch(
-              `https://newsapi.org/v2/everything?q=${query}${locationQuery}&language=en&sortBy=publishedAt&pageSize=50&from=${fromDate}`,
+              `https://newsapi.org/v2/top-headlines?country=us&category=general&pageSize=50`,
               {
                 headers: {
                   'X-Api-Key': apiKey
                 }
               }
             );
-
+            
             if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
+              throw new Error(`Top headlines failed: ${response.status}`);
             }
-
-            const data = await response.json();
-            return data.articles || [];
-          })
-        );
-
-        // Combine and deduplicate articles
-        const combinedArticles = allArticles.flat();
-        
-        // Filter articles to ensure they are relevant
-        const relevantKeywords = [
-          // Nonprofit keywords
-          'nonprofit', 'non-profit', 'charity', 'foundation', 'NGO',
-          'charitable', 'philanthropy', 'donation', 'fundraising',
-          
-          // Community keywords
-          'community', 'volunteer', 'service', 'grassroots',
-          'social impact', 'humanitarian',
-          
-          // Progress keywords
-          'improvement', 'development', 'initiative', 'success',
-          'progress', 'solution', 'innovation',
-          
-          // Cause keywords
-          'education', 'environment', 'climate', 'health',
-          'poverty', 'conservation', 'sustainability',
-          'empowerment', 'wellbeing', 'protection'
+            
+            return response.json();
+          },
+          // Second attempt: Simple everything query
+          async () => {
+            console.log('Attempting to fetch everything endpoint...');
+            const response = await fetch(
+              `https://newsapi.org/v2/everything?q=nonprofit OR charity OR community&language=en&pageSize=50&sortBy=publishedAt`,
+              {
+                headers: {
+                  'X-Api-Key': apiKey
+                }
+              }
+            );
+            
+            if (!response.ok) {
+              throw new Error(`Everything endpoint failed: ${response.status}`);
+            }
+            
+            return response.json();
+          }
         ];
-        
-        const filteredArticles = combinedArticles.filter(article => {
-          if (!article.title || !article.description) return false;
-          const text = `${article.title} ${article.description}`.toLowerCase();
-          return (
-            relevantKeywords.some(keyword => text.includes(keyword.toLowerCase())) &&
-            !text.includes('bitcoin') && // Exclude cryptocurrency news
-            !text.includes('crypto') &&
-            !text.includes('stock market') // Exclude financial market news
-          );
+
+        // Try each fetch attempt until one succeeds
+        let articles = [];
+        let lastError = null;
+
+        for (const attempt of fetchAttempts) {
+          try {
+            const data = await attempt();
+            if (data.articles && data.articles.length > 0) {
+              articles = data.articles;
+              console.log(`Successfully fetched ${articles.length} articles`);
+              break;
+            }
+          } catch (error) {
+            console.error('Fetch attempt failed:', error);
+            lastError = error;
+          }
+        }
+
+        if (articles.length === 0) {
+          console.error('All fetch attempts failed:', lastError);
+          // Use fallback data
+          setNews([
+            {
+              title: "Community Volunteers Make a Difference in Local Food Banks",
+              url: "https://example.com/news1",
+              publisher: "Community News"
+            },
+            {
+              title: "New Environmental Conservation Initiative Launches",
+              url: "https://example.com/news2",
+              publisher: "Environmental Times"
+            },
+            {
+              title: "Youth Mentorship Program Shows Promising Results",
+              url: "https://example.com/news3",
+              publisher: "Education Weekly"
+            },
+            {
+              title: "Local Charity Expands Support Services",
+              url: "https://example.com/news4",
+              publisher: "City News"
+            },
+            {
+              title: "Innovative Social Program Helps Homeless Find Housing",
+              url: "https://example.com/news5",
+              publisher: "Social Impact News"
+            }
+          ]);
+          setError('Using fallback news data while we fix the connection...');
+          return;
+        }
+
+        // Filter and process the articles
+        const filteredArticles = articles.filter(article => {
+          if (!article?.title) return false;
+          const text = article.title.toLowerCase();
+          // Less strict filtering to ensure we get some results
+          return !text.includes('bitcoin') && 
+                 !text.includes('crypto') && 
+                 !text.includes('stock market');
         });
 
-        // Remove duplicates using URL as unique identifier
+        // Remove duplicates
         const uniqueArticles = Array.from(
           new Map(filteredArticles.map(article => [article.url, article])).values()
         );
@@ -134,13 +138,13 @@ export default function NewsCarousel() {
           const newsItems = uniqueArticles.map((article: any) => ({
             title: article.title,
             url: article.url,
-            publisher: article.source.name
+            publisher: article.source?.name || 'News Source'
           }));
           setNews(newsItems);
           setError(null);
-          console.log(`Fetched ${newsItems.length} unique articles`);
+          console.log(`Successfully processed ${newsItems.length} news items`);
         } else {
-          throw new Error('No articles found in the response');
+          throw new Error('No articles found after filtering');
         }
       } catch (error) {
         console.error('Error fetching news:', error);

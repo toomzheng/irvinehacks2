@@ -22,12 +22,13 @@ export async function GET(request: Request) {
   }
 
   try {
-    const backendUrl = 'https://b333-128-54-50-221.ngrok-free.app' // Replace with your ngrok URL
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000'
     const response = await fetch(
       `${backendUrl}/nonprofits/${zipCode}?interest=${encodeURIComponent(type)}`
     )
 
     if (!response.ok) {
+      console.error(`Backend request failed: ${response.status} - ${await response.text()}`)
       throw new Error(`Failed to fetch nonprofits: ${response.status}`)
     }
 

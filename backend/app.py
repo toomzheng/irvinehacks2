@@ -1,9 +1,12 @@
 # app.py
-from fastapi import FastAPI
+import os
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from pydantic import BaseModel
 from main import nonprofits
 import logging
+import uvicorn
 
 # Set up debug logging
 logging.basicConfig(level=logging.DEBUG)
@@ -22,6 +25,15 @@ app = FastAPI(
     version="1.0.0",
 )
 
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, replace with your frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 def read_root():
@@ -37,7 +49,7 @@ def read_root():
 
 
 @app.get("/nonprofits/{zip_code}", response_model=List[NonprofitRecommendation])
-def get_nonprofits(zip_code: int, interest: str = ""):
+async def get_nonprofits(zip_code: int, interest: str = ""):
     """
     Get nonprofit recommendations for a specific ZIP code and interest area.
 
@@ -48,10 +60,17 @@ def get_nonprofits(zip_code: int, interest: str = ""):
     Returns:
         List[NonprofitRecommendation]: A list of nonprofit recommendations with details
     """
-    logging.debug(
-        f"Received request for nonprofits in {zip_code} with interest {interest}"
-    )
-    result = nonprofits(zip_code, interest)
-    logging.debug(f"Received result from nonprofits function: {result}")
-    # Convert each dict to a NonprofitRecommendation model
-    return [NonprofitRecommendation(**item) for item in result]
+    try:
+        logging.debug(f"Received request for zip_code={zip_code}, interest={interest}")
+        results = nonprofits(zip_code, interest)
+        if not results:
+            raise HTTPException(status_code=404, detail="No nonprofits found for the given criteria")
+        return results
+    except Exception as e:
+        logging.error(f"Error processing request: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    uvicorn.run(app, host="0.0.0.0", port=port)

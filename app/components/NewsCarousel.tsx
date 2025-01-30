@@ -120,7 +120,7 @@ export default function NewsCarousel() {
         }
 
         // Filter and process the articles
-        const filteredArticles = articles.filter(article => {
+        const filteredArticles = articles.filter((article: { title: string; }) => {
           if (!article?.title) return false;
           const text = article.title.toLowerCase();
           // Less strict filtering to ensure we get some results
@@ -131,7 +131,7 @@ export default function NewsCarousel() {
 
         // Remove duplicates
         const uniqueArticles = Array.from(
-          new Map(filteredArticles.map(article => [article.url, article])).values()
+          new Map(filteredArticles.map((article: { url: any; }) => [article.url, article])).values()
         );
 
         if (uniqueArticles.length > 0) {

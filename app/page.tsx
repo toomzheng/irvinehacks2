@@ -158,7 +158,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.3 }}
             className="absolute top-8 left-8 z-20"
           >
             <button
@@ -179,7 +179,7 @@ export default function Home() {
                 initial="hidden"
                 animate="visible"
                 variants={fadeInUpVariants}
-                transition={{ duration: 1.2, ease: "easeOut" }}
+                transition={{ duration: 0.5 }}
                 className="flex items-center gap-2"
               >
                 <div className="flex -space-x-3">
@@ -194,7 +194,7 @@ export default function Home() {
                 initial="hidden"
                 animate="visible"
                 variants={fadeInUpVariants}
-                transition={{ duration: 1.2, ease: "easeOut", delay: 0.15 }}
+                transition={{ duration: 0.4, ease: "easeOut", delay: 0.15 }}
                 className="absolute top-8 right-8"
               >
                 <button
@@ -210,7 +210,7 @@ export default function Home() {
                 initial="hidden"
                 animate="visible"
                 variants={fadeInUpVariants}
-                transition={{ duration: 1.2, ease: "easeOut", delay: 0.15 }}
+                transition={{ duration: 0.4, ease: "easeOut", delay: 0.15 }}
                 className="text-center"
               >
                 <div className="text-6xl font-bold mb-4 font-impact">WE ARE</div>
@@ -238,7 +238,7 @@ export default function Home() {
                 initial="hidden"
                 animate="visible"
                 variants={fadeInUpVariants}
-                transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+                transition={{ duration: 0.4, ease: "easeOut", delay: 0.3 }}
                 className="text-4xl font-semibold text-center mt-8 mb-8 font-arial text-black"
               >
                 FIND NONPROFITS NEAR YOU!
@@ -248,7 +248,7 @@ export default function Home() {
                 initial="hidden"
                 animate="visible"
                 variants={fadeInUpVariants}
-                transition={{ duration: 1.2, ease: "easeOut", delay: 0.45 }}
+                transition={{ duration: 0.4, ease: "easeOut", delay: 0.45 }}
                 className="w-full max-w-2xl space-y-6"
               >
                 <div className="w-full max-w-7xl mx-auto px-4">
@@ -313,7 +313,7 @@ export default function Home() {
                                   onClick={handleSurpriseMe}
                                   className="text-[#FF7B7B] hover:text-[#FF5260] hover:bg-transparent font-semibold px-4 py-2 text-lg"
                                 >
-                                  Surprise Me!
+                                  I'm feeling lucky!
                                 </button>
                               </motion.div>
                             )}
@@ -328,12 +328,12 @@ export default function Home() {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: showSearchButton ? 1 : 0 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
                     className="absolute left-1/2 -translate-x-1/2 top-0 w-full flex justify-center"
                   >
                     <button
                       className="px-12 py-6 bg-blue-500 text-white rounded-full text-2xl hover:bg-blue-600 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform"
-                      onClick={handleSearch}
+                      onClick={() => handleSearch()}
                     >
                       Search
                     </button>
@@ -344,7 +344,7 @@ export default function Home() {
           </div>
 
           {/* Lebron Mode Button Container - Always present */}
-          <div className="relative z-10 w-full max-w-md px-4 mb-8 h-[72px]">
+          <div className="relative z-10 w-full max-w-md px-4 mb-16 mt-10 h-[80px]">
             <AnimatePresence>
               {showLebronMode && (
                 <motion.div

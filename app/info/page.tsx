@@ -60,25 +60,7 @@ export default function InfoPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center relative overflow-hidden">
-      {/* Animated Wave Background */}
-      <motion.div 
-        className="absolute inset-0 z-0"
-        initial={{ y: "100%" }}
-        animate={{ y: 0 }}
-        transition={{ duration: 2, ease: "easeOut" }}
-        style={{ backgroundColor: '#0933FE' }}
-      >
-        <div className="absolute top-0 left-0 w-full"
-          style={{
-            height: '120px',
-            background: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 1200 120\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 0v46.29c47.79 22.2 103.59 32.17 158 28 70.36-5.37 136.33-33.31 206.8-37.5 73.84-4.36 147.54 16.88 218.2 35.26 69.27 18 138.3 24.88 209.4 13.08 36.15-6 69.85-17.84 104.45-29.34C989.49 25 1113-14.29 1200 52.47V0z\' fill=\'%23FFFFFF\'/%3E%3C/svg%3E")',
-            backgroundSize: 'cover',
-            transform: 'translateY(-99%)',
-          }}
-        />
-      </motion.div>
-
+    <main className="min-h-screen flex flex-col items-center relative overflow-hidden bg-[#0933FE]">
       {/* Content */}
       <div className="relative z-10 w-full">
         <div className="w-full pt-12">

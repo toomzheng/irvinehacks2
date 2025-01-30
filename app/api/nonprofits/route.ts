@@ -1,22 +1,15 @@
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
-  const { searchParams, pathname } = new URL(request.url)
-
-  // Handle zipCode from both URL patterns
-  let zipCode = searchParams.get('zipCode')
-  if (!zipCode) {
-    const matches = pathname.match(/\/nonprofits\/(\d+)/)
-    if (matches) {
-      zipCode = matches[1]
-    }
-  }
-
+  // Get zipCode and type from query parameters
+  const { searchParams } = new URL(request.url)
+  const zipCode = searchParams.get('zipCode')
   const type = searchParams.get('type')
 
+  // Validate required parameters
   if (!zipCode || !type) {
     return NextResponse.json(
-      { error: 'Missing required parameters' },
+      { error: 'Missing required parameters: zipCode and type' },
       { status: 400 }
     )
   }
@@ -28,15 +21,15 @@ export async function GET(request: Request) {
     )
 
     if (!response.ok) {
-      console.error(`Backend request failed: ${response.status} - ${await response.text()}`)
-      throw new Error(`Failed to fetch nonprofits: ${response.status}`)
+      throw new Error(`Search failed with status: ${response.status}`)
     }
 
     const data = await response.json()
     return NextResponse.json(data)
   } catch (error) {
+    console.error('Error during search:', error)
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to fetch nonprofits' },
+      { error: 'Search failed' },
       { status: 500 }
     )
   }

@@ -19,50 +19,24 @@ export default function NewsCarousel() {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const apiKey = process.env.NEXT_PUBLIC_NEWS_API_KEY;
-        if (!apiKey) {
-          throw new Error('News API key is not configured');
-        }
-
-        const postalCode = sessionStorage.getItem('lastZipCode') || '';
-        const locationQuery = postalCode ? `+location:${postalCode}` : '';
-
         // Try top headlines first, then fall back to everything endpoint
         const fetchAttempts = [
-          // First attempt: US top headlines with category
+          // First attempt: US top headlines
           async () => {
             console.log('Attempting to fetch top headlines...');
-            const response = await fetch(
-              `https://newsapi.org/v2/top-headlines?country=us&category=general&pageSize=50`,
-              {
-                headers: {
-                  'X-Api-Key': apiKey
-                }
-              }
-            );
-            
+            const response = await fetch('/api/news?endpoint=headlines');
             if (!response.ok) {
               throw new Error(`Top headlines failed: ${response.status}`);
             }
-            
             return response.json();
           },
-          // Second attempt: Simple everything query
+          // Second attempt: Everything query
           async () => {
             console.log('Attempting to fetch everything endpoint...');
-            const response = await fetch(
-              `https://newsapi.org/v2/everything?q=nonprofit OR charity OR community&language=en&pageSize=50&sortBy=publishedAt`,
-              {
-                headers: {
-                  'X-Api-Key': apiKey
-                }
-              }
-            );
-            
+            const response = await fetch('/api/news?endpoint=everything');
             if (!response.ok) {
               throw new Error(`Everything endpoint failed: ${response.status}`);
             }
-            
             return response.json();
           }
         ];

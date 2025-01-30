@@ -26,7 +26,7 @@ export default function Home() {
         return;
       }
 
-      const response = await fetch(`/api/nonprofits?zipCode=${zipCode}&type=${type}`);
+      const response = await fetch(`/api/nonprofits/${zipCode}?interest=${encodeURIComponent(type)}`);
 
       if (!response.ok) {
         throw new Error('Search failed');

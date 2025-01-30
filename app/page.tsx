@@ -333,7 +333,7 @@ export default function Home() {
                   >
                     <button
                       className="px-12 py-6 bg-blue-500 text-white rounded-full text-2xl hover:bg-blue-600 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform"
-                      onClick={handleSearch}
+                      onClick={() => handleSearch()}
                     >
                       Search
                     </button>
@@ -344,7 +344,7 @@ export default function Home() {
           </div>
 
           {/* Lebron Mode Button Container - Always present */}
-          <div className="relative z-10 w-full max-w-md px-4 mb-8 h-[72px]">
+          <div className="relative z-10 w-full max-w-md px-4 mb-16 mt-10 h-[80px]">
             <AnimatePresence>
               {showLebronMode && (
                 <motion.div
